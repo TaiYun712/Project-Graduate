@@ -13,16 +13,17 @@ public class GameMapGenerate : MonoBehaviour
  
     Vector2 hexCoords;
 
-    public GameObject grassLandTile;
+    public GameObject grassLandTile,waterTile;
 
     public TileFactory tileFactory;
 
+    
     void Start()
     {
        MakeMapGrid();
     }
 
-    Vector2 GetHexCoords(int x,int z)
+    Vector2 GetHexCoords(int x,int z) // 調整六邊形的連接位置
     {
         float xPos = x * tileSize * Mathf.Cos(Mathf.Deg2Rad*30);
         float zPos = z * tileSize  + ((x % 2 == 1) ? tileSize * 0.5f : 0);
@@ -32,18 +33,20 @@ public class GameMapGenerate : MonoBehaviour
 
     public void MakeMapGrid()
     {
+       
         for (int x = 0; x < mapWidth; x++)
         {
             for (int z = 0; z < mapHeight; z++)
             {
+                            
+
                 hexCoords = GetHexCoords(x,z);
 
                 Vector3 pos = new Vector3(hexCoords.x,0,hexCoords.y);
                 tileFactory.GetTile(pos);
+                
             }
         }
-
-        
     }
 
    
