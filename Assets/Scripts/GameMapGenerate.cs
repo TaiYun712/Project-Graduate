@@ -17,7 +17,8 @@ public class GameMapGenerate : MonoBehaviour
 
     public TileFactory tileFactory;
 
-    
+
+   
     void Start()
     {
        MakeMapGrid();
@@ -38,8 +39,7 @@ public class GameMapGenerate : MonoBehaviour
         {
             for (int z = 0; z < mapHeight; z++)
             {
-                            
-
+                           
                 hexCoords = GetHexCoords(x,z);
 
                 Vector3 pos = new Vector3(hexCoords.x,0,hexCoords.y);
@@ -47,7 +47,5 @@ public class GameMapGenerate : MonoBehaviour
                 
             }
         }
-    }
-
-   
+    } 
 }
