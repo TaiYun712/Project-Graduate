@@ -13,7 +13,7 @@ public class GameMapGenerate : MonoBehaviour
  
     Vector2 hexCoords;
 
-    public GameObject grassLandTile,waterTile;
+    public GameObject grassLandTile;
 
     public TileFactory tileFactory;
 
