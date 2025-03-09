@@ -9,7 +9,7 @@ public class TileFactory : MonoBehaviour
     Queue<GameObject> grassTilePool = new Queue<GameObject>();
 
     public int poolSize;
-    public Transform mapParent;
+   // public Transform mapParent;
 
     void Start()
     {
@@ -20,7 +20,7 @@ public class TileFactory : MonoBehaviour
     {
         for (int i = 0; i < poolSize; i++)
         {
-            GameObject tile = Instantiate(grassTile,mapParent);
+            GameObject tile = Instantiate(grassTile,this.transform);
             tile.SetActive(false); //先關閉
             grassTilePool.Enqueue(tile); //放進池裡
         }
@@ -35,7 +35,7 @@ public class TileFactory : MonoBehaviour
         }
         else //如果池裡空了就再生成
         {
-            tile = Instantiate(grassTile,mapParent);
+            tile = Instantiate(grassTile,this.transform);
         }
 
         tile.transform.position = pos;

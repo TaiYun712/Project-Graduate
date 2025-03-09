@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class GameMapGenerate : MonoBehaviour
 {
-    [Range(0f, 10f)]
+    [Range(0f, 100f)]
     public int mapWidth;
-    [Range(0f, 10f)]
+    [Range(0f, 100f)]
     public int mapHeight;
 
     public float tileSize;
@@ -24,7 +24,7 @@ public class GameMapGenerate : MonoBehaviour
        MakeMapGrid();
     }
 
-    Vector2 GetHexCoords(int x,int z) // ½Õ¾ã¤»Ãä§Îªº³s±µ¦ì¸m
+    Vector2 GetHexCoords(int x,int z) // èª¿æ•´å…­é‚Šå½¢çš„é€£æ¥ä½ç½®
     {
         float xPos = x * tileSize * Mathf.Cos(Mathf.Deg2Rad*30);
         float zPos = z * tileSize  + ((x % 2 == 1) ? tileSize * 0.5f : 0);
