@@ -6,6 +6,9 @@ TagManager:
   tags:
   - LandTile
   - WaterTile
+  - CityTile
+  - VillageTile
+  - IndustryTile
   layers:
   - Default
   - TransparentFX

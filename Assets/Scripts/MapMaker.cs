@@ -47,10 +47,10 @@ public class MapMaker : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                bool isLand = tileDatas[x, y].isLand;
+               TileData data = tileDatas[x, y];
 
                 //從物件池中取tile
-                GameObject tileGO = tilePool.GetTile(isLand);
+                GameObject tileGO = tilePool.GetTile(data);
 
                 tileGO.transform.SetParent(this.transform,false);
 
@@ -66,8 +66,34 @@ public class MapMaker : MonoBehaviour
     {
         foreach (var tileGo in activeTiles)
         {
-            bool isLand = tileGo.CompareTag("LandTile");
-            tilePool.ReturnTile(tileGo, isLand);
+            TileData tileData = tileGo.GetComponent<TileData>();
+
+            if (tileData == null)
+            {
+                Debug.Log(tileGo.name + "沒有TileData");
+                continue;
+            }
+
+            if (tileGo.CompareTag("LandTile"))
+            {
+                tilePool.ReturnTile(tileGo, tileData);
+            }else if (tileGo.CompareTag("WaterTile"))
+            {
+                tilePool.ReturnTile(tileGo, tileData);
+            }else if (tileGo.CompareTag("CityTile"))
+            {
+                tilePool.ReturnTile(tileGo, tileData);
+            }else if (tileGo.CompareTag("VillageTile"))
+            {
+                tilePool.ReturnTile(tileGo, tileData);
+            }else if (tileGo.CompareTag("IndustryTile"))
+            {
+                tilePool.ReturnTile(tileGo, tileData);
+            }
+            else
+            {
+                tilePool.ReturnTile(tileGo, tileData);
+            }
         }
 
         activeTiles.Clear();
