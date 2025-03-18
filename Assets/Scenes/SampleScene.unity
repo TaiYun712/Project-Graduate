@@ -973,7 +973,7 @@ MonoBehaviour:
   mapHeight: 0
   allTownPlace: 0
   generateTownsCount: 50
-  cityRate: 0.5
+  cityRate: 0.4
   villageRate: 0.8
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

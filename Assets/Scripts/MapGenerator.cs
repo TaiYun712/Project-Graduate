@@ -15,7 +15,7 @@ public class MapGenerator : MonoBehaviour
     public TileData[,] tileData; //儲存產生好的地圖資料
 
     [Header("TownSetting")]
-    [SerializeField] int allTownPlace;
+    [SerializeField] int allTownPlace;  //
     public int generateTownsCount; //自訂聚落生成數量
     public float cityRate;
     public float villageRate;
