@@ -7,9 +7,15 @@ public class TilePool : MonoBehaviour
     [Header("Tile Prefabs")]
     public GameObject landTilePf;
     public GameObject waterTilePf;
-    public GameObject cityTilePf;
-    public GameObject villageTilePf;
-    public GameObject industryTilePf;
+
+    [Header("Towns Prefabs")]
+    public GameObject[] cityTilePf;
+    public GameObject[] villageTilePf;
+    public GameObject[] industryTilePf;
+
+    [Header("FoodPoint Prefabs")]
+    public GameObject fruitBushPf;
+    public GameObject insectGrassPf;
 
     Stack<GameObject> landPool = new Stack<GameObject>();
     Stack<GameObject> waterPool = new Stack<GameObject>();
@@ -17,6 +23,15 @@ public class TilePool : MonoBehaviour
     Stack<GameObject> villagePool = new Stack<GameObject>();
     Stack<GameObject> industryPool = new Stack<GameObject>();
 
+    Stack<GameObject> fruitPool = new Stack<GameObject>();
+    Stack<GameObject> grassPool = new Stack<GameObject>();
+
+    //取得隨機造型
+    GameObject GetRandomPf(GameObject[] pfs)
+    {
+        if(pfs.Length == 0) return null;
+        return pfs[Random.Range(0, pfs.Length)];
+    }
 
     //取得tile
     public GameObject GetTile(TileData tileData)
@@ -28,16 +43,18 @@ public class TilePool : MonoBehaviour
         if(tileData.setTownType == SetTownType.City)
         {
             pool = cityPool;
-            pf = cityTilePf;
+            pf = GetRandomPf(cityTilePf);
         }else if(tileData.setTownType == SetTownType.Village)
         {
             pool = villagePool;
-            pf = villageTilePf;
-        }else if(tileData.setTownType == SetTownType.Industry)
+            pf = GetRandomPf(villageTilePf);
+        }
+        else if(tileData.setTownType == SetTownType.Industry)
         {
             pool = industryPool;
-            pf = industryTilePf;
-        }else if (tileData.isLand)
+            pf = GetRandomPf(industryTilePf);
+        }
+        else if (tileData.isLand)
         {
             pool = landPool;
             pf = landTilePf;
@@ -48,19 +65,42 @@ public class TilePool : MonoBehaviour
             pf = waterTilePf;
         }
 
-        GameObject tile;
+        return GetFromPool(pool, pf);
 
-        if (pool.Count > 0)
+       
+    }
+
+
+    public GameObject GetTileObject(TileObjectType objectType)
+    {
+        Stack<GameObject> pool;
+        GameObject pf;
+
+        if(objectType == TileObjectType.FruitBush)
         {
-            tile = pool.Pop();
-            tile.SetActive(true);
+            pool = fruitPool;
+            pf = fruitBushPf;
+        }
+        else if(objectType == TileObjectType.InsectGrass)
+        {
+            pool = grassPool;
+            pf = insectGrassPf;
         }
         else
         {
-            tile = Instantiate(pf);
+            return null;
         }
 
-        return tile;
+        return GetFromPool(pool, pf);
+    }
+
+
+    //取出tile
+    GameObject GetFromPool(Stack<GameObject> pool,GameObject prefab)
+    {
+        GameObject obj =(pool.Count > 0)? pool.Pop() : Instantiate(prefab);
+        obj.SetActive(true);
+        return obj;
     }
 
     //回收tile
@@ -68,16 +108,34 @@ public class TilePool : MonoBehaviour
     {
         tile.SetActive(false);
 
-        if (tileData.setTownType == SetTownType.City)
-            cityPool.Push(tile);
-        else if(tileData.setTownType == SetTownType.Village)
-            villagePool.Push(tile);
-        else if(tileData.setTownType == SetTownType.Industry)
-            industryPool.Push(tile);
-        else if(tileData.isLand)
-            landPool.Push(tile);
-        else
-            waterPool.Push(tile);
+        if (tileData.setTownType == SetTownType.City) { cityPool.Push(tile); }
+        else if (tileData.setTownType == SetTownType.Village) { villagePool.Push(tile); }
+        else if (tileData.setTownType == SetTownType.Industry) { industryPool.Push(tile); }   
+        else if (tileData.isLand) { landPool.Push(tile); }
+        else { waterPool.Push(tile); }
+           
     }
-  
+
+    //回收果叢&草叢
+    public void ReturnObject(GameObject obj, TileObjectType objectType)
+    {
+        Stack<GameObject> pool;
+
+        if (objectType == TileObjectType.FruitBush)
+        {
+            pool = fruitPool;
+        }
+        else if (objectType == TileObjectType.InsectGrass)
+        {
+            pool = grassPool;
+        }
+        else
+        {
+            return;
+        }
+
+        obj.SetActive(false);
+        pool.Push(obj);
+    }
+
 }

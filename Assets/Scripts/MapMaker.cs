@@ -51,13 +51,22 @@ public class MapMaker : MonoBehaviour
 
                 //從物件池中取tile
                 GameObject tileGO = tilePool.GetTile(data);
-
                 tileGO.transform.SetParent(this.transform,false);
-
                 hexCoords = GetHexCoords(x,y);
                 tileGO.transform.localPosition = new Vector3(hexCoords.x, 0, hexCoords.y);
-
                 activeTiles.Add(tileGO);
+
+                if(data.tileObjectType == TileObjectType.FruitBush)
+                {
+                    GameObject fruitBush = tilePool.GetTileObject(TileObjectType.FruitBush);
+                    fruitBush.transform.position = tileGO.transform.position +Vector3.up*0.2f;
+                    activeTiles.Add(fruitBush);
+                }else if (data.tileObjectType == TileObjectType.InsectGrass)
+                {
+                    GameObject grass = tilePool.GetTileObject(TileObjectType.InsectGrass);
+                    grass.transform.position = tileGO.transform.position + Vector3.up * 0.2f;
+                    activeTiles.Add(grass);
+                }
             }
         }
     }
@@ -74,25 +83,14 @@ public class MapMaker : MonoBehaviour
                 continue;
             }
 
-            if (tileGo.CompareTag("LandTile"))
+            tilePool.ReturnTile(tileGo, tileData);
+
+            if(tileData.tileObjectType == TileObjectType.FruitBush)
             {
-                tilePool.ReturnTile(tileGo, tileData);
-            }else if (tileGo.CompareTag("WaterTile"))
+                tilePool.ReturnObject(tileGo,TileObjectType.FruitBush);
+            }else if (tileData.tileObjectType == TileObjectType.InsectGrass)
             {
-                tilePool.ReturnTile(tileGo, tileData);
-            }else if (tileGo.CompareTag("CityTile"))
-            {
-                tilePool.ReturnTile(tileGo, tileData);
-            }else if (tileGo.CompareTag("VillageTile"))
-            {
-                tilePool.ReturnTile(tileGo, tileData);
-            }else if (tileGo.CompareTag("IndustryTile"))
-            {
-                tilePool.ReturnTile(tileGo, tileData);
-            }
-            else
-            {
-                tilePool.ReturnTile(tileGo, tileData);
+                tilePool.ReturnObject(tileGo,TileObjectType.InsectGrass);
             }
         }
 

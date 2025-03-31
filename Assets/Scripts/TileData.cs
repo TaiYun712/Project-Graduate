@@ -7,6 +7,8 @@ public class TileData
     public bool isLand; //不是陸地就是水
 
     public SetTownType setTownType = SetTownType.None; //預設 無聚落
+
+    public TileObjectType tileObjectType  = TileObjectType.None; //物件類型
 }
 
 public enum SetTownType
@@ -15,5 +17,12 @@ public enum SetTownType
     City,
     Village,
     Industry
+}
+
+public enum TileObjectType
+{
+    None,
+    FruitBush,
+    InsectGrass
 }
 

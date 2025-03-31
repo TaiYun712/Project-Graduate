@@ -6,7 +6,7 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     [Header("MapSettings")]
-    public Texture2D mapTexture; //黑白地圖
+    public Texture2D mapTexture; //地圖
     public bool flipY = true;
 
     public int mapWidth;
@@ -15,8 +15,7 @@ public class MapGenerator : MonoBehaviour
     public TileData[,] tileData; //儲存產生好的地圖資料
 
     [Header("TownSetting")]
-    [SerializeField] int allTownPlace;  //
-    public int generateTownsCount; //自訂聚落生成數量
+    [SerializeField] int allTownPlace;  
     public float cityRate;
     public float villageRate;
 
@@ -39,59 +38,109 @@ public class MapGenerator : MonoBehaviour
         if(mapHeight ==0) mapHeight = mapTexture.height;
 
         tileData = new TileData[mapWidth, mapHeight];
-        List<Vector2Int> townPlaces = new List<Vector2Int>(); //存放可生成聚落的位置
+        List<Vector2Int> townCenters = new List<Vector2Int>(); //存放可生成聚落中心的位置
+        List<Vector2Int> townAreas = new List<Vector2Int>(); //存放可生成聚落開發格的位置
+        List<Vector2Int> fruitPlaces = new List<Vector2Int>();//存放可生成果叢的位置
+        List<Vector2Int> insectPlaces = new List<Vector2Int>();//存放可生成昆蟲草叢的位置
 
         //分析每個像素
         for (int x = 0; x < mapWidth; x++)
         {
             for (int y = 0; y < mapHeight; y++)
             {
-                Color pxGray = flipY ?
+                Color32 pxColor = flipY ?
                 mapTexture.GetPixel(x, mapTexture.height - 1 - y): 
                 mapTexture.GetPixel(x, y);
+               
+                bool isLand = false; //地形
+                SetTownType setTownType = SetTownType.None; //聚落
+                TileObjectType tileObject = TileObjectType.None; //物件
 
-                float graySC = pxGray.grayscale;
-                bool isLand = graySC < 0.5f;
-                SetTownType setTownType = SetTownType.None;
+                if (IsColorClose(pxColor,new Color32(0,0,0,255))) { isLand = true; } //生成土地-黑
+                else if (IsColorClose(pxColor, new Color32(255, 255, 255, 255))) { isLand = false; }//生成水-白
+                else if (IsColorClose(pxColor, new Color32(128,128, 128, 255))) { continue; } //不生成-灰
+                else if (IsColorClose(pxColor, new Color32(255, 128, 0, 255))) //生成聚落中心-橘
+                { isLand = true; townCenters.Add(new Vector2Int(x, y)); }
+                else if (IsColorClose(pxColor, new Color32(255, 255, 0, 255))) //生成聚落開發區域-黃
+                { isLand = true;townAreas.Add(new Vector2Int(x, y)); }
+                else if (IsColorClose(pxColor, new Color32(255, 0, 0, 255))) //生成果叢-紅
+                { isLand = true;tileObject = TileObjectType.FruitBush;fruitPlaces.Add(new Vector2Int(x, y)); }
+                else if(IsColorClose(pxColor, new Color32(165, 42, 42, 255)))  //生成草叢-棕
+                {  isLand = true; tileObject = TileObjectType.InsectGrass;insectPlaces.Add(new Vector2Int(x, y)); }
+                else if(IsColorClose(pxColor, new Color32(0, 0, 255, 255))) {  isLand = true;} //起點
+                else if (IsColorClose(pxColor, new Color32(0, 255, 0, 255))) {  isLand = true;} //終點
 
-                //紀錄灰色區域為聚落可生成點
-                if(graySC >0.3f && graySC < 0.7f)
-                {
-                    townPlaces.Add(new Vector2Int(x, y));
-                }
 
-                tileData[x, y] = new TileData { isLand =  isLand ,setTownType = setTownType};
+                tileData[x, y] = new TileData { isLand = isLand, setTownType = setTownType,tileObjectType = tileObject };
+
+               
             }
         }
 
-        allTownPlace = townPlaces.Count;
-        Debug.Log($"找到{allTownPlace}個聚落生成點");
+        allTownPlace = townCenters.Count;
+        Debug.Log($"找到{allTownPlace}個聚落生成點,{ townAreas.Count}格開發區域");
 
-        AssignTowns(townPlaces);
+        AssignTowns(townCenters,townAreas);
     }
 
-    void AssignTowns(List<Vector2Int> theTownPlaces)
+    bool IsColorClose(Color32 a,Color32 b,int tolerance = 10)
     {
-        if (theTownPlaces.Count == 0) return;
+        return Mathf.Abs(a.r - b.r) <= tolerance &&
+               Mathf.Abs(a.g - b.g) <= tolerance &&
+                Mathf.Abs(a.b - b.b) <= tolerance;
+    }
 
-        int count = Mathf.Min(generateTownsCount, theTownPlaces.Count);//限制數量
-        //打亂後選出要生成聚落的點
-        List<Vector2Int> selectedPoints = theTownPlaces.OrderBy(x => Random.value).Take(count).ToList();
+    void AssignTowns(List<Vector2Int> townCenters,List<Vector2Int> townAreas)
+    {
+        if (townCenters.Count == 0) return;
+        Debug.Log($"共有{townCenters.Count}個聚落");
 
-        //分配聚落類型
-        for (int i = 0; i < selectedPoints.Count; i++)
+        foreach (var center in townCenters)
         {
-            SetTownType type;
-            float rand = Random.value;
+            SetTownType townType = GetRandomTownType();
+            tileData[center.x, center.y].setTownType = townType;
 
-            if (rand < cityRate) type = SetTownType.City;
-            else if (rand < villageRate) type = SetTownType.Village;
-            else type = SetTownType.Industry;
-
-            Vector2Int pos = selectedPoints[i];
-            tileData[pos.x, pos.y].setTownType = type;
+            foreach (var area in townAreas)
+            {
+                if (IsNeighbor(center, area))
+                {
+                    tileData[area.x,area.y].setTownType = townType;
+                }
+            }
         }
 
-        Debug.Log($"已分配{count}個聚落");
+        Debug.Log($"已分配{townCenters.Count}個聚落");
+       
+    }
+
+    //判斷格子是否相鄰
+    bool IsNeighbor(Vector2Int a,Vector2Int b) 
+    {
+        Vector2Int[] directions = GetHexDirections();
+        foreach (var dir in directions)
+        {
+            if(a + dir == b)return true;
+        }
+        return false;
+    }
+
+    //六邊形格子相鄰方向
+    Vector2Int[] GetHexDirections()
+    {
+        return new Vector2Int[]
+        {
+        new Vector2Int(1, 0), new Vector2Int(-1, 0),
+        new Vector2Int(0, 1), new Vector2Int(0, -1),
+        new Vector2Int(1, -1), new Vector2Int(-1, 1)
+        };
+    }
+
+    //隨機聚落類型
+    SetTownType GetRandomTownType()
+    {
+        float rand = Random.value;
+        if (rand < cityRate) return SetTownType.City;
+        if (rand < cityRate + villageRate) return SetTownType.Village;
+        return SetTownType.Industry;
     }
 }
