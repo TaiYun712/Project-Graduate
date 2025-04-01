@@ -14,6 +14,8 @@ public class MapMaker : MonoBehaviour
     List<GameObject> activeTiles = new List<GameObject>();
     Vector2 hexCoords;
 
+
+
     void Start()
     {
         MakeMap();
@@ -95,6 +97,7 @@ public class MapMaker : MonoBehaviour
         }
 
         activeTiles.Clear();
+       
     }
 
 }

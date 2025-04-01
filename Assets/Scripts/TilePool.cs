@@ -29,13 +29,20 @@ public class TilePool : MonoBehaviour
     //取得隨機造型
     GameObject GetRandomPf(GameObject[] pfs)
     {
-        if(pfs.Length == 0) return null;
+        if (pfs.Length == 0 || pfs == null) {Debug.Log("預製體數組為空"); return null; } 
         return pfs[Random.Range(0, pfs.Length)];
     }
 
     //取得tile
     public GameObject GetTile(TileData tileData)
     {
+
+        if (tileData == null)
+        {
+            Debug.LogError("傳入的TileData為null！");
+            return null;
+        }
+
         //選擇用哪個pool&tile
         Stack<GameObject> pool;
         GameObject pf;
@@ -98,6 +105,13 @@ public class TilePool : MonoBehaviour
     //取出tile
     GameObject GetFromPool(Stack<GameObject> pool,GameObject prefab)
     {
+
+        if (prefab == null)
+        {
+            Debug.LogError("預製體為null，無法從對象池獲取對象！");
+            return null;
+        }
+
         GameObject obj =(pool.Count > 0)? pool.Pop() : Instantiate(prefab);
         obj.SetActive(true);
         return obj;
