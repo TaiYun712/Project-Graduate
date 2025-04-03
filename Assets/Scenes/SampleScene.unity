@@ -934,6 +934,7 @@ MonoBehaviour:
   flipY: 0
   mapWidth: 0
   mapHeight: 0
+  colorTolerance: 10
   allTownPlace: 0
   cityRate: 0
   villageRate: 0
@@ -981,10 +982,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c7af628212d8404d8ed46747b349c24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapTexture: {fileID: 2800000, guid: b5705176c68326748912b0f1b92503ff, type: 3}
+  mapTexture: {fileID: 2800000, guid: 9e645d4ed1a0fd94c86c4787633f02b9, type: 3}
   flipY: 0
   mapWidth: 0
   mapHeight: 0
+  colorTolerance: 25
   allTownPlace: 0
   cityRate: 0.4
   villageRate: 0.8

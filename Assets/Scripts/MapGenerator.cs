@@ -86,8 +86,7 @@ public class MapGenerator : MonoBehaviour
                 else if (IsColorClose(pxColor, GREEN, colorTolerance)) {  isLand = true;} //終點
                 else
                 {
-                    Debug.Log($"座標: ({x}, {y})的TileData 為 null！");
-                    
+                    Debug.Log($"座標: ({x}, {y})的TileData 為 null！");                  
                 }
 
                 tileData[x, y] = new TileData { isLand = isLand, setTownType = setTownType,tileObjectType = tileObject };
