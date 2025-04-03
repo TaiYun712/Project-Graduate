@@ -53,6 +53,9 @@ public class MapMaker : MonoBehaviour
 
                 //從物件池中取tile
                 GameObject tileGO = tilePool.GetTile(data);
+
+               
+
                 tileGO.transform.SetParent(this.transform,false);
                 hexCoords = GetHexCoords(x,y);
                 tileGO.transform.localPosition = new Vector3(hexCoords.x, 0, hexCoords.y);
@@ -61,12 +64,12 @@ public class MapMaker : MonoBehaviour
                 if(data.tileObjectType == TileObjectType.FruitBush)
                 {
                     GameObject fruitBush = tilePool.GetTileObject(TileObjectType.FruitBush);
-                    fruitBush.transform.position = tileGO.transform.position +Vector3.up*0.2f;
+                    fruitBush.transform.position = tileGO.transform.position +Vector3.up*0.08f;
                     activeTiles.Add(fruitBush);
                 }else if (data.tileObjectType == TileObjectType.InsectGrass)
                 {
                     GameObject grass = tilePool.GetTileObject(TileObjectType.InsectGrass);
-                    grass.transform.position = tileGO.transform.position + Vector3.up * 0.2f;
+                    grass.transform.position = tileGO.transform.position + Vector3.up * 0.08f;
                     activeTiles.Add(grass);
                 }
             }

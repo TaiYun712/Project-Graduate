@@ -14,10 +14,23 @@ public class MapGenerator : MonoBehaviour
 
     public TileData[,] tileData; //儲存產生好的地圖資料
 
+    public int colorTolerance = 10; //顏色偏差值
+
     [Header("TownSetting")]
     [SerializeField] int allTownPlace;  
     public float cityRate;
     public float villageRate;
+
+    //顏色
+    private static readonly Color32 BLACK = new Color32(0, 0, 0, 255);
+    private static readonly Color32 WHITE = new Color32(255, 255, 255, 255);
+    private static readonly Color32 GRAY = new Color32(167, 167, 167, 255);
+    private static readonly Color32 ORANGE = new Color32(255, 180, 0, 255);
+    private static readonly Color32 YELLOW = new Color32(255, 253, 47, 255);
+    private static readonly Color32 RED = new Color32(255, 14, 14, 255);
+    private static readonly Color32 BROWN = new Color32(112, 79, 6, 255);
+    private static readonly Color32 BLUE = new Color32(18, 196, 255, 255);
+    private static readonly Color32 GREEN = new Color32(83, 255,25, 255);
 
 
     private void Awake()
@@ -37,6 +50,7 @@ public class MapGenerator : MonoBehaviour
         if(mapWidth ==0) mapWidth = mapTexture.width;
         if(mapHeight ==0) mapHeight = mapTexture.height;
 
+
         tileData = new TileData[mapWidth, mapHeight];
         List<Vector2Int> townCenters = new List<Vector2Int>(); //存放可生成聚落中心的位置
         List<Vector2Int> townAreas = new List<Vector2Int>(); //存放可生成聚落開發格的位置
@@ -49,27 +63,32 @@ public class MapGenerator : MonoBehaviour
             for (int y = 0; y < mapHeight; y++)
             {
                 Color32 pxColor = flipY ?
-                mapTexture.GetPixel(x, mapTexture.height - 1 - y): 
-                mapTexture.GetPixel(x, y);
-               
+               (Color32) mapTexture.GetPixel(x, mapTexture.height - 1 - y): 
+               (Color32) mapTexture.GetPixel(x, y);
+               // Debug.Log(pxColor);
+
                 bool isLand = false; //地形
                 SetTownType setTownType = SetTownType.None; //聚落
                 TileObjectType tileObject = TileObjectType.None; //物件
 
-                if (IsColorClose(pxColor,new Color32(0,0,0,255))) { isLand = true; } //生成土地-黑
-                else if (IsColorClose(pxColor, new Color32(255, 255, 255, 255))) { isLand = false; }//生成水-白
-                else if (IsColorClose(pxColor, new Color32(128,128, 128, 255))) { continue; } //不生成-灰
-                else if (IsColorClose(pxColor, new Color32(255, 128, 0, 255))) //生成聚落中心-橘
+                if (IsColorClose(pxColor,BLACK,colorTolerance)) { isLand = true; } //生成土地-黑
+                else if (IsColorClose(pxColor, WHITE, colorTolerance)) { isLand = false; }//生成水-白
+                else if (IsColorClose(pxColor, GRAY, colorTolerance)) { continue; } //不生成-灰
+                else if (IsColorClose(pxColor, ORANGE, colorTolerance)) //生成聚落中心-橘
                 { isLand = true; townCenters.Add(new Vector2Int(x, y)); }
-                else if (IsColorClose(pxColor, new Color32(255, 255, 0, 255))) //生成聚落開發區域-黃
+                else if (IsColorClose(pxColor,YELLOW, colorTolerance)) //生成聚落開發區域-黃
                 { isLand = true;townAreas.Add(new Vector2Int(x, y)); }
-                else if (IsColorClose(pxColor, new Color32(255, 0, 0, 255))) //生成果叢-紅
+                else if (IsColorClose(pxColor,RED, colorTolerance)) //生成果叢-紅
                 { isLand = true;tileObject = TileObjectType.FruitBush;fruitPlaces.Add(new Vector2Int(x, y)); }
-                else if(IsColorClose(pxColor, new Color32(165, 42, 42, 255)))  //生成草叢-棕
+                else if(IsColorClose(pxColor, BROWN, colorTolerance))  //生成草叢-棕
                 {  isLand = true; tileObject = TileObjectType.InsectGrass;insectPlaces.Add(new Vector2Int(x, y)); }
-                else if(IsColorClose(pxColor, new Color32(0, 0, 255, 255))) {  isLand = true;} //起點
-                else if (IsColorClose(pxColor, new Color32(0, 255, 0, 255))) {  isLand = true;} //終點
-
+                else if(IsColorClose(pxColor, BLUE, colorTolerance)) {  isLand = true;} //起點
+                else if (IsColorClose(pxColor, GREEN, colorTolerance)) {  isLand = true;} //終點
+                else
+                {
+                    Debug.Log($"座標: ({x}, {y})的TileData 為 null！");
+                    
+                }
 
                 tileData[x, y] = new TileData { isLand = isLand, setTownType = setTownType,tileObjectType = tileObject };
 
@@ -83,13 +102,14 @@ public class MapGenerator : MonoBehaviour
         AssignTowns(townCenters,townAreas);
     }
 
-    bool IsColorClose(Color32 a,Color32 b,int tolerance = 10)
+    
+    bool IsColorClose(Color32 a,Color32 b,int tolerance)
     {
         return Mathf.Abs(a.r - b.r) <= tolerance &&
                Mathf.Abs(a.g - b.g) <= tolerance &&
                 Mathf.Abs(a.b - b.b) <= tolerance;
     }
-
+    
     void AssignTowns(List<Vector2Int> townCenters,List<Vector2Int> townAreas)
     {
         if (townCenters.Count == 0) return;
