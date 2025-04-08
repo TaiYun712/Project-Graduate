@@ -53,7 +53,11 @@ public class MapMaker : MonoBehaviour
 
                 //從物件池中取tile
                 GameObject tileGO = tilePool.GetTile(data);
-
+                if (tileGO != null) //沒資料的跳過
+                {
+                    Debug.Log(data + "tile生成失敗");
+                    continue;
+                }
                
 
                 tileGO.transform.SetParent(this.transform,false);
