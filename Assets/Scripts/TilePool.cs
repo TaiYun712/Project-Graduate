@@ -13,18 +13,13 @@ public class TilePool : MonoBehaviour
     public GameObject[] villageTilePf;
     public GameObject[] industryTilePf;
 
-    [Header("FoodPoint Prefabs")]
-    public GameObject fruitBushPf;
-    public GameObject insectGrassPf;
+   
 
     Stack<GameObject> landPool = new Stack<GameObject>();
     Stack<GameObject> waterPool = new Stack<GameObject>();
     Stack<GameObject> cityPool = new Stack<GameObject>();
     Stack<GameObject> villagePool = new Stack<GameObject>();
     Stack<GameObject> industryPool = new Stack<GameObject>();
-
-    Stack<GameObject> fruitPool = new Stack<GameObject>();
-    Stack<GameObject> grassPool = new Stack<GameObject>();
 
     //取得隨機造型
     GameObject GetRandomPf(GameObject[] pfs)
@@ -36,7 +31,7 @@ public class TilePool : MonoBehaviour
     //取得tile
     public GameObject GetTile(TileData tileData)
     {
-
+        
         if (tileData == null)
         {
             Debug.LogError("傳入的TileData為null！");
@@ -72,34 +67,19 @@ public class TilePool : MonoBehaviour
             pf = waterTilePf;
         }
 
-        return GetFromPool(pool, pf);
+        GameObject tileGO =  GetFromPool(pool, pf);
 
-       
+        var tileBehavior = pf.GetComponent<TileBehavior>();
+        if(tileBehavior != null)
+        {
+            tileBehavior.tileData = tileData;
+        }
+
+        return tileGO;
     }
 
 
-    public GameObject GetTileObject(TileObjectType objectType)
-    {
-        Stack<GameObject> pool;
-        GameObject pf;
-
-        if(objectType == TileObjectType.FruitBush)
-        {
-            pool = fruitPool;
-            pf = fruitBushPf;
-        }
-        else if(objectType == TileObjectType.InsectGrass)
-        {
-            pool = grassPool;
-            pf = insectGrassPf;
-        }
-        else
-        {
-            return null;
-        }
-
-        return GetFromPool(pool, pf);
-    }
+   
 
 
     //取出tile
@@ -130,26 +110,6 @@ public class TilePool : MonoBehaviour
            
     }
 
-    //回收果叢&草叢
-    public void ReturnObject(GameObject obj, TileObjectType objectType)
-    {
-        Stack<GameObject> pool;
-
-        if (objectType == TileObjectType.FruitBush)
-        {
-            pool = fruitPool;
-        }
-        else if (objectType == TileObjectType.InsectGrass)
-        {
-            pool = grassPool;
-        }
-        else
-        {
-            return;
-        }
-
-        obj.SetActive(false);
-        pool.Push(obj);
-    }
+   
 
 }

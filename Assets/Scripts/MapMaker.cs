@@ -34,26 +34,28 @@ public class MapMaker : MonoBehaviour
     {
         ClearTiles();
 
-        var tileDatas = mapGenerator.tileData;
-        if(tileDatas == null)
+        TileData[,] mapData = mapGenerator.GenerateMapData();
+        int width = mapData.GetLength(0);
+        int height = mapData.GetLength(1);
+
+        if (mapData == null)
         {
             Debug.LogError("沒呼叫到地圖資訊");
             return;
         }
 
-        int width = mapGenerator.mapWidth;
-        int height = mapGenerator.mapHeight;
-
-        //生成tile
+            
+       //生成tile
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-               TileData data = tileDatas[x, y];
+               TileData data = mapData[x, y];
+               if(data == null) { continue; }
 
                 //從物件池中取tile
                 GameObject tileGO = tilePool.GetTile(data);
-                if (tileGO != null) //沒資料的跳過
+                if (tileGO == null) //沒資料的跳過
                 {
                     Debug.Log(data + "tile生成失敗");
                     continue;
@@ -65,16 +67,10 @@ public class MapMaker : MonoBehaviour
                 tileGO.transform.localPosition = new Vector3(hexCoords.x, 0, hexCoords.y);
                 activeTiles.Add(tileGO);
 
-                if(data.tileObjectType == TileObjectType.FruitBush)
+                var behavior = tileGO.GetComponent<TileBehavior>();
+                if( behavior != null)
                 {
-                    GameObject fruitBush = tilePool.GetTileObject(TileObjectType.FruitBush);
-                    fruitBush.transform.position = tileGO.transform.position +Vector3.up*0.08f;
-                    activeTiles.Add(fruitBush);
-                }else if (data.tileObjectType == TileObjectType.InsectGrass)
-                {
-                    GameObject grass = tilePool.GetTileObject(TileObjectType.InsectGrass);
-                    grass.transform.position = tileGO.transform.position + Vector3.up * 0.08f;
-                    activeTiles.Add(grass);
+                    behavior.gridPos = new Vector2Int(x, y);
                 }
             }
         }
@@ -94,13 +90,7 @@ public class MapMaker : MonoBehaviour
 
             tilePool.ReturnTile(tileGo, tileData);
 
-            if(tileData.tileObjectType == TileObjectType.FruitBush)
-            {
-                tilePool.ReturnObject(tileGo,TileObjectType.FruitBush);
-            }else if (tileData.tileObjectType == TileObjectType.InsectGrass)
-            {
-                tilePool.ReturnObject(tileGo,TileObjectType.InsectGrass);
-            }
+           
         }
 
         activeTiles.Clear();

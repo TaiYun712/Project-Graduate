@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class TileData
 {
     public bool isLand; //不是陸地就是水，預設為陸地
 
     public SetTownType setTownType = SetTownType.None; //預設 無聚落
 
-    public TileObjectType tileObjectType  = TileObjectType.None; //物件類型
+    
 }
 
 public enum SetTownType
@@ -19,10 +20,5 @@ public enum SetTownType
     Industry
 }
 
-public enum TileObjectType
-{
-    None,
-    FruitBush,
-    InsectGrass
-}
+
 
