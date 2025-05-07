@@ -67,7 +67,7 @@ public class MapMaker : MonoBehaviour
                 tileGO.transform.localPosition = new Vector3(hexCoords.x, 0, hexCoords.y);
                 activeTiles.Add(tileGO);
 
-                var behavior = tileGO.GetComponent<TileBehavior>();
+                var behavior = tileGO.GetComponent<TileBehaviour>();
                 if( behavior != null)
                 {
                     behavior.gridPos = new Vector2Int(x, y);
