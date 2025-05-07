@@ -19,10 +19,10 @@ public class MapGenerator : MonoBehaviour
     public float villageRate;
 
     //顏色
-    private static readonly Color32 BLACK = new Color32(0, 0, 0, 255);
-    private static readonly Color32 WHITE = new Color32(255, 255, 255, 255);
-    private static readonly Color32 GRAY = new Color32(167, 167, 167, 255);
-    private static readonly Color32 ORANGE = new Color32(255, 180, 0, 255);
+    private static readonly Color32 BLACK = new Color32(0, 0, 0, 255);       //土地
+    private static readonly Color32 WHITE = new Color32(255, 255, 255, 255); //水
+    private static readonly Color32 GRAY = new Color32(167, 167, 167, 255);  //無
+    private static readonly Color32 ORANGE = new Color32(255, 180, 0, 255);  //聚落
    
 
     public TileData[,] GenerateMapData()
@@ -81,8 +81,8 @@ public class MapGenerator : MonoBehaviour
     SetTownType GetRandomTownType()
     {
         float rand = Random.value;
-        if (rand < cityRate) return SetTownType.City;
-        if (rand < cityRate + villageRate) return SetTownType.Village;
+        if (rand < cityRate) { return SetTownType.City; }
+        if (rand < cityRate + villageRate) { return SetTownType.Village; } 
         return SetTownType.Industry;
     }
 }
