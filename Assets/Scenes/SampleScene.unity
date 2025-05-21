@@ -597,7 +597,6 @@ MonoBehaviour:
   villageTilePf:
   - {fileID: 3949986130893268722, guid: 9690bb5b79fa44a4ba4d5eba78700494, type: 3}
   - {fileID: 5075332287391842565, guid: 4cd707ad3dd545340bda87c7f63331c0, type: 3}
-  - {fileID: 919132149155446097, guid: 9b2811e6292de0049a331fb16460367a, type: 3}
   industryTilePf:
   - {fileID: 5877625524810349132, guid: 7a501d34b60b0a744996566748d4ef84, type: 3}
   - {fileID: 8766930117400495581, guid: c95b2e5b5724c4d45b0a6060a5d9b7fd, type: 3}
