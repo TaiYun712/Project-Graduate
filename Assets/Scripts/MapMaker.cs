@@ -15,20 +15,14 @@ public class MapMaker : MonoBehaviour
     Vector2 hexCoords;
 
 
+    VirtualHexGrid hexGrid = new VirtualHexGrid();
+    public VirtualHexGrid HexGrid => hexGrid;
+
 
     void Start()
     {
         MakeMap();
     }
-
-    Vector2 GetHexCoords(int x, int y) // 調整六邊形的連接位置
-    {
-        float xPos = x * tileSize * Mathf.Cos(Mathf.Deg2Rad * 30);
-        float yPos = y * tileSize + ((x % 2 == 1) ? tileSize * 0.5f : 0);
-
-        return new Vector2(xPos, yPos);
-    }
-
 
     public void MakeMap()
     {
@@ -50,8 +44,18 @@ public class MapMaker : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
+
+               Vector2Int pos = new Vector2Int(x, y);
                TileData data = mapData[x, y];
-               if(data == null) { continue; }
+
+               if(data == null)
+                {
+                    data = new TileData { isLand = false};
+                }
+
+                hexGrid.SetTile(pos,data);
+
+                if (mapGenerator.IsGray(x, y)) { continue; } //不生成灰色格子
 
                 //從物件池中取tile
                 GameObject tileGO = tilePool.GetTile(data);
@@ -65,13 +69,18 @@ public class MapMaker : MonoBehaviour
                 tileGO.transform.SetParent(this.transform,false);
                 hexCoords = GetHexCoords(x,y);
                 tileGO.transform.localPosition = new Vector3(hexCoords.x, 0, hexCoords.y);
-                activeTiles.Add(tileGO);
+                
 
                 var behavior = tileGO.GetComponent<TileBehaviour>();
                 if( behavior != null)
                 {
-                    behavior.gridPos = new Vector2Int(x, y);
+                    behavior.gridPos = pos;
+                    behavior.tileData = data;
                 }
+
+                hexGrid.GetTile(pos).tileObject = tileGO;
+                activeTiles.Add(tileGO);
+                Debug.Log($"現在共有{activeTiles.Count}個tile");
             }
         }
     }
@@ -80,21 +89,22 @@ public class MapMaker : MonoBehaviour
     {
         foreach (var tileGo in activeTiles)
         {
-            TileData tileData = tileGo.GetComponent<TileData>();
+            var behavior = tileGo.GetComponent<TileBehaviour>();
+            if (behavior == null || behavior.tileData == null) {  continue; }
 
-            if (tileData == null)
-            {
-                Debug.Log(tileGo.name + "沒有TileData");
-                continue;
-            }
-
-            tilePool.ReturnTile(tileGo, tileData);
-
-           
+            tilePool.ReturnTile(tileGo, behavior.tileData);
         }
 
         activeTiles.Clear();
        
+    }
+
+    Vector2 GetHexCoords(int x, int y) // 調整六邊形的連接位置
+    {
+        float xPos = x * tileSize * Mathf.Cos(Mathf.Deg2Rad * 30);
+        float yPos = y * tileSize + ((x % 2 == 1) ? tileSize * 0.5f : 0);
+
+        return new Vector2(xPos, yPos);
     }
 
 }

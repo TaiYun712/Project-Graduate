@@ -67,15 +67,20 @@ public class MapGenerator : MonoBehaviour
         return mapData;
     }
 
-    
+    //顏色偏差容許
     bool IsColorClose(Color32 a,Color32 b,int tolerance)
     {
         return Mathf.Abs(a.r - b.r) <= tolerance &&
                Mathf.Abs(a.g - b.g) <= tolerance &&
                 Mathf.Abs(a.b - b.b) <= tolerance;
     }
-    
-   
+
+    //供其他腳本判斷灰色不生成區，並在「實體生成階段」時決定不產生物件
+    public bool IsGray(int x,int y)
+    {
+        if(x < 0 || x >= mapWidth || y < 0 || y >= mapHeight) {  return false; }
+        return IsColorClose(mapTexture.GetPixel(x, y), GRAY, colorTolerance);
+    }
 
     //隨機聚落類型
     SetTownType GetRandomTownType()
