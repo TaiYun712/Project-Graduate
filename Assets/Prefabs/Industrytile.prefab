@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1141089550441413299}
   m_Layer: 6
   m_Name: Industrytile
-  m_TagString: Untagged
+  m_TagString: GameMapTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

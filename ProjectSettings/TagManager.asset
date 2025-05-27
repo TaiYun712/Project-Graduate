@@ -9,6 +9,8 @@ TagManager:
   - CityTile
   - VillageTile
   - IndustryTile
+  - GameMapTile
+  - PlayerTile
   layers:
   - Default
   - TransparentFX

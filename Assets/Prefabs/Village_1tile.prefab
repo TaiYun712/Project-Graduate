@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -3836684268953150903}
   m_Layer: 6
   m_Name: Village_1tile
-  m_TagString: Untagged
+  m_TagString: GameMapTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileData:
     isLand: 0
-    setTownType: 0
+    setTownType: 2
   gridPos: {x: 0, y: 0}
 --- !u!65 &-3836684268953150903
 BoxCollider:
