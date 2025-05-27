@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3234114456765568843}
   - component: {fileID: 4299482467162190473}
   - component: {fileID: -2685301013065976942}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: watertile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,6 +122,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 004eaf7479fbb3f4b8a1164abf028774, type: 3}
       propertyPath: m_Name
       value: Water_Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 004eaf7479fbb3f4b8a1164abf028774, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

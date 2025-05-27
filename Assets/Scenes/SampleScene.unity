@@ -597,7 +597,7 @@ MonoBehaviour:
   villageTilePf:
   - {fileID: 3949986130893268722, guid: 9690bb5b79fa44a4ba4d5eba78700494, type: 3}
   - {fileID: 5075332287391842565, guid: 4cd707ad3dd545340bda87c7f63331c0, type: 3}
-  - {fileID: 919132149155446097, guid: 70e303688507a574f8f5e58aa8b7f9d7, type: 3}
+  - {fileID: 2450772540428520933, guid: b9ab7cb6f2dcf73488112dd1d6d40ce3, type: 3}
   industryTilePf:
   - {fileID: 5877625524810349132, guid: 7a501d34b60b0a744996566748d4ef84, type: 3}
   - {fileID: 8766930117400495581, guid: c95b2e5b5724c4d45b0a6060a5d9b7fd, type: 3}
@@ -966,8 +966,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5507192, y: -0, z: -0, w: 0.8346906}
-  m_LocalPosition: {x: 0, y: 2.623, z: -0.135}
+  m_LocalRotation: {x: 0.7043419, y: 0.0023350224, z: -0.002327362, w: 0.7098533}
+  m_LocalPosition: {x: -0.04225526, y: 2.9927874, z: 0.34695214}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

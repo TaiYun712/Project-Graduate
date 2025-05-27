@@ -15,7 +15,13 @@ public class Select_Test : MonoBehaviour
 
     void Update()
     {
+        RightClickToGetTileInfo();
 
+    }
+
+    //按滑鼠右鍵取得tile屬性資訊
+    void RightClickToGetTileInfo()
+    {
         if (Input.GetMouseButtonDown(1))
         {
             Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
@@ -40,7 +46,5 @@ public class Select_Test : MonoBehaviour
                 }
             }
         }
-       
-       
     }
 }

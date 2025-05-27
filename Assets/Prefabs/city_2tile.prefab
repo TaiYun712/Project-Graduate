@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4906025394788321483}
   - component: {fileID: 308974113947158583}
   - component: {fileID: 5837997797304394415}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: city_2tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileData:
     isLand: 0
-    setTownType: 0
+    setTownType: 1
   gridPos: {x: 0, y: 0}
 --- !u!65 &5837997797304394415
 BoxCollider:
@@ -122,6 +122,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8ee8b7f38623cd34ea34490868a70bb8, type: 3}
       propertyPath: m_Name
       value: CityCenter_Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8ee8b7f38623cd34ea34490868a70bb8, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

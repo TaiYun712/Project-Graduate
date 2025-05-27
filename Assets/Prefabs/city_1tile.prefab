@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 719733235272018956}
   - component: {fileID: 1163780048981760106}
   - component: {fileID: 3534791790928690611}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: city_1tile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileData:
     isLand: 0
-    setTownType: 0
+    setTownType: 1
   gridPos: {x: 0, y: 0}
 --- !u!65 &3534791790928690611
 BoxCollider:
@@ -119,9 +119,37 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -6675596245257571777, guid: 36d24f9dcac9cdd40921c6aedab23f69, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: -4402933728741362815, guid: 36d24f9dcac9cdd40921c6aedab23f69, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 36d24f9dcac9cdd40921c6aedab23f69, type: 3}
       propertyPath: m_Name
       value: City_testland
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 36d24f9dcac9cdd40921c6aedab23f69, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453867057046894638, guid: 36d24f9dcac9cdd40921c6aedab23f69, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1688585021383064639, guid: 36d24f9dcac9cdd40921c6aedab23f69, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8206717380181523071, guid: 36d24f9dcac9cdd40921c6aedab23f69, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8302669472717371518, guid: 36d24f9dcac9cdd40921c6aedab23f69, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
