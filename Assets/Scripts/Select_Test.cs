@@ -1,4 +1,4 @@
-using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,6 +16,7 @@ public class Select_Test : MonoBehaviour
     public float planeHeight;
     public Transform mapPlane;
     public float hexTileSize;
+    public float maxCheckDistance;
 
     GameObject heldTile;
     Vector3 offset = Vector3.zero;
@@ -125,7 +126,7 @@ public class Select_Test : MonoBehaviour
                 new Vector3(0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize)         // ¥k¤U
                 };
 
-                if (nearestCollider != null)
+                if (nearestCollider != null && minDist < maxCheckDistance)
                 {
                     Transform nearest = nearestCollider.transform;
 
@@ -147,6 +148,11 @@ public class Select_Test : MonoBehaviour
 
                     placeableHintPf.transform.position = bestSnapPos;
                     placeableHintPf.SetActive(true);
+
+                }
+                else
+                {
+                    placeableHintPf.SetActive(false);
 
                 }
 
