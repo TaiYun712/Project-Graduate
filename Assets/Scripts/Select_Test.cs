@@ -13,6 +13,9 @@ public class Select_Test : MonoBehaviour
     public LayerMask mapTileLayer;
     public float snapDistance = 0.5f;
     public GameObject placeableHintPf;
+    public float planeHeight;
+    public Transform mapPlane;
+    public float hexTileSize;
 
     GameObject heldTile;
     Vector3 offset = Vector3.zero;
@@ -20,6 +23,8 @@ public class Select_Test : MonoBehaviour
 
     void Start()
     {
+        planeHeight = mapPlane.position.y;
+
         selectHintPf.SetActive(false);
         placeableHintPf.SetActive(false);
     }
@@ -85,20 +90,37 @@ public class Select_Test : MonoBehaviour
         //拖曳
         if(isHolding && heldTile != null)
         {
-            Plane plane = new Plane(Vector3.up,Vector3.zero); //zx平面
+            Plane plane = new Plane(Vector3.up,new Vector3 (0,planeHeight,0)); //zx平面
             Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
 
             if(plane.Raycast(ray,out float enter))
             {
                 Vector3 point = ray.GetPoint(enter);
-                heldTile.transform.position = new Vector3(point.x,0f,point.z) + offset;
+                heldTile.transform.position = new Vector3(point.x,planeHeight,point.z) + offset;
 
                 //找最近地圖tile
                 Collider[] hits = Physics.OverlapSphere(heldTile.transform.position,snapDistance,mapTileLayer);
-                if(hits.Length > 0)
+
+                Collider nearestCollider = null;
+                float minDist = float.MaxValue;
+
+                foreach(var hit in hits)
                 {
-                    Transform nearest = hits[0].transform;
-                    placeableHintPf.transform.position = nearest.position;
+                    float dist = Vector3.Distance(heldTile.transform.position, hit.transform.position);
+                    if(dist < minDist)
+                    {
+                        minDist = dist;
+                        nearestCollider = hit;
+                    }
+                }
+
+                if(nearestCollider !=null)
+                {
+                    Transform nearest = nearestCollider.transform;
+                    Vector3 direction = (heldTile.transform.position - nearest.position).normalized;
+                    Vector3 snapPos = nearest.position + direction * hexTileSize *2.0f;
+
+                    placeableHintPf.transform.position = snapPos;
                     placeableHintPf.SetActive(true);
                 }
                 else
@@ -126,5 +148,6 @@ public class Select_Test : MonoBehaviour
         }
 
     }
+
 
 }
