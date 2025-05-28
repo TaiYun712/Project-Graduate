@@ -70,84 +70,110 @@ public class Select_Test : MonoBehaviour
         //拿起
         if (Input.GetMouseButtonDown(0))
         {
-            Ray ray = mainCam.ScreenPointToRay (Input.mousePosition);
-            if(Physics.Raycast(ray,out RaycastHit hit, 100f))
+            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
             {
                 if (hit.collider.CompareTag("PlayerTile"))
                 {
                     heldTile = hit.collider.gameObject;
-                    offset = heldTile.transform.position - hit.point;
+
                     isHolding = true;
 
-                    if (!placeableHintPf.activeSelf) 
-                    { 
-                      placeableHintPf.SetActive(true); 
+                    if (!placeableHintPf.activeSelf)
+                    {
+                        placeableHintPf.SetActive(true);
                     }
                 }
             }
         }
 
         //拖曳
-        if(isHolding && heldTile != null)
+        if (isHolding && heldTile != null)
         {
-            Plane plane = new Plane(Vector3.up,new Vector3 (0,planeHeight,0)); //zx平面
+            Plane plane = new Plane(Vector3.up, new Vector3(0, planeHeight, 0)); //zx平面
             Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
 
-            if(plane.Raycast(ray,out float enter))
+            if (plane.Raycast(ray, out float enter))
             {
                 Vector3 point = ray.GetPoint(enter);
-                heldTile.transform.position = new Vector3(point.x,planeHeight,point.z) + offset;
+                heldTile.transform.position = new Vector3(point.x, planeHeight, point.z);
 
                 //找最近地圖tile
-                Collider[] hits = Physics.OverlapSphere(heldTile.transform.position,snapDistance,mapTileLayer);
+                Collider[] hits = Physics.OverlapSphere(heldTile.transform.position, snapDistance, mapTileLayer);
 
                 Collider nearestCollider = null;
                 float minDist = float.MaxValue;
 
-                foreach(var hit in hits)
+                foreach (var hit in hits)
                 {
                     float dist = Vector3.Distance(heldTile.transform.position, hit.transform.position);
-                    if(dist < minDist)
+                    if (dist < minDist)
                     {
                         minDist = dist;
                         nearestCollider = hit;
                     }
                 }
 
-                if(nearestCollider !=null)
+                //六邊形的六個方向
+                Vector3[] hexDirs = new Vector3[]
+                {
+                new Vector3(1.5f * hexTileSize, 0, 0),                                       // 右
+                new Vector3(0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),         // 右上
+                new Vector3(-0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),        // 左上
+                new Vector3(-1.5f * hexTileSize, 0, 0),                                      // 左
+                new Vector3(-0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize),       // 左下
+                new Vector3(0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize)         // 右下
+                };
+
+                if (nearestCollider != null)
                 {
                     Transform nearest = nearestCollider.transform;
-                    Vector3 direction = (heldTile.transform.position - nearest.position).normalized;
-                    Vector3 snapPos = nearest.position + direction * hexTileSize *2.0f;
 
-                    placeableHintPf.transform.position = snapPos;
+                    Vector3 bestSnapPos = Vector3.zero;
+                    float minSnapDist = float.MaxValue;
+
+                    foreach (Vector3 dir in hexDirs)
+                    {
+                        Vector3 candidatePos = nearest.position + dir;
+                        float dist = Vector3.Distance(heldTile.transform.position, candidatePos);
+
+                        if (dist < minSnapDist)
+                        {
+                            minSnapDist = dist;
+                            bestSnapPos = candidatePos;
+                        }
+
+                    }
+
+                    placeableHintPf.transform.position = bestSnapPos;
                     placeableHintPf.SetActive(true);
+
                 }
-                else
-                {
-                    placeableHintPf.SetActive(false);
-                }
+
             }
-        }
 
-        //放開
-        if (Input.GetMouseButtonUp(0) && isHolding)
-        {
-            isHolding = false;
-
-            if(placeableHintPf.activeSelf && heldTile != null)
+            //放開
+            if (Input.GetMouseButtonUp(0) && isHolding)
             {
-                heldTile.transform.position = placeableHintPf.transform.position;
-                heldTile.layer = LayerMask.NameToLayer("MapTile");
-                heldTile.tag = "GameMapTile";
-            }
+                isHolding = false;
 
-            heldTile = null;
-            placeableHintPf.SetActive(false);
+                if (placeableHintPf.activeSelf && heldTile != null)
+                {
+                    heldTile.transform.position = placeableHintPf.transform.position;
+                    heldTile.layer = LayerMask.NameToLayer("MapTile");
+                    heldTile.tag = "GameMapTile";
+                }
+
+                heldTile = null;
+                placeableHintPf.SetActive(false);
+
+            }
 
         }
 
     }
-
-
 }
+    
+      
+
+    
