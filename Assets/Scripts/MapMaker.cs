@@ -101,10 +101,13 @@ public class MapMaker : MonoBehaviour
 
     Vector2 GetHexCoords(int x, int y) // 調整六邊形的連接位置
     {
+        
         float xPos = x * tileSize * Mathf.Cos(Mathf.Deg2Rad * 30);
         float yPos = y * tileSize + ((x % 2 == 1) ? tileSize * 0.5f : 0);
 
         return new Vector2(xPos, yPos);
+        
+       // return hexGrid.GridToWorld(new Vector2Int(x, y), tileSize);
     }
 
 }

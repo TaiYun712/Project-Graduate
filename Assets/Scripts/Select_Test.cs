@@ -22,6 +22,11 @@ public class Select_Test : MonoBehaviour
     Vector3 offset = Vector3.zero;
     bool isHolding = false;
 
+    [Header("參考 MapMaker")]
+    public MapMaker mapMaker;
+
+    List<Vector2Int> attachablePositions;
+
     void Start()
     {
         planeHeight = mapPlane.position.y;
@@ -84,6 +89,9 @@ public class Select_Test : MonoBehaviour
                     {
                         placeableHintPf.SetActive(true);
                     }
+
+                    //取得合法拼接位置清單
+                    attachablePositions = mapMaker.HexGrid.GetAttachablePositions();
                 }
             }
         }
@@ -100,11 +108,51 @@ public class Select_Test : MonoBehaviour
                 heldTile.transform.position = new Vector3(point.x, planeHeight, point.z);
 
                 //找最近地圖tile
+                /*
+                float minSnapDist = float.MaxValue;
+                Vector3 bestSnapPos = Vector3.zero;
+                bool foundSnap = false;
+
+                foreach(Vector2Int gridPos in attachablePositions)
+                {
+                    Vector2 worldXZ = mapMaker.HexGrid.GridToWorld(gridPos,hexTileSize);
+                    Vector3 candidatePos = new Vector3(worldXZ.x, planeHeight, worldXZ.y);
+
+                    float dist = Vector3.Distance(heldTile.transform.position, candidatePos);
+                    if(dist < minSnapDist)
+                    {
+                        minSnapDist = dist;
+                        bestSnapPos = candidatePos;
+                        foundSnap = true;
+                    }
+                }
+
+                if(foundSnap && minSnapDist < maxCheckDistance)
+                {
+                    placeableHintPf.transform.position = bestSnapPos;
+                    placeableHintPf.SetActive(true);
+                }
+                else
+                {
+                    placeableHintPf.SetActive(false);
+
+                }
+                */
+
+                Vector3[] hexDirs = new Vector3[]
+                {
+                new Vector3(1.5f * hexTileSize, 0, 0),                                       // 右
+                new Vector3(0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),         // 右上
+                new Vector3(-0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),        // 左上
+                new Vector3(-1.5f * hexTileSize, 0, 0),                                      // 左
+                new Vector3(-0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize),       // 左下
+                new Vector3(0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize)         // 右下
+                };
+
                 Collider[] hits = Physics.OverlapSphere(heldTile.transform.position, snapDistance, mapTileLayer);
-
-                Collider nearestCollider = null;
                 float minDist = float.MaxValue;
-
+                Collider nearestCollider = null;
+                
                 foreach (var hit in hits)
                 {
                     float dist = Vector3.Distance(heldTile.transform.position, hit.transform.position);
@@ -115,16 +163,7 @@ public class Select_Test : MonoBehaviour
                     }
                 }
 
-                //六邊形的六個方向
-                Vector3[] hexDirs = new Vector3[]
-                {
-                new Vector3(1.5f * hexTileSize, 0, 0),                                       // 右
-                new Vector3(0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),         // 右上
-                new Vector3(-0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),        // 左上
-                new Vector3(-1.5f * hexTileSize, 0, 0),                                      // 左
-                new Vector3(-0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize),       // 左下
-                new Vector3(0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize)         // 右下
-                };
+                     
 
                 if (nearestCollider != null && minDist < maxCheckDistance)
                 {
@@ -155,7 +194,7 @@ public class Select_Test : MonoBehaviour
                     placeableHintPf.SetActive(false);
 
                 }
-
+                
             }
 
             //放開
