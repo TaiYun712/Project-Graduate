@@ -1184,6 +1184,7 @@ MonoBehaviour:
   planeHeight: 0
   mapPlane: {fileID: 663753472}
   hexTileSize: 0.09
+  maxCheckDistance: 0.5
 --- !u!4 &1071969076
 Transform:
   m_ObjectHideFlags: 0
