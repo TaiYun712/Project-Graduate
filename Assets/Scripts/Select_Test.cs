@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Select_Test : MonoBehaviour
 {
-    [Header("¨ú±o¸ê°T")]
+    [Header("å–å¾—è³‡è¨Š")]
     public Camera mainCam;
     public GameObject selectHintPf;
     public float hintHeight = 0.3f;
 
-    [Header("«÷±µTile")]
+    [Header("æ‹¼æ¥Tile")]
     public LayerMask mapTileLayer;
     public float snapDistance = 0.5f;
     public GameObject placeableHintPf;
@@ -36,7 +36,7 @@ public class Select_Test : MonoBehaviour
         LeftClickToDragAndSnap();
     }
 
-    //«ö·Æ¹«¥kÁä¨ú±otileÄİ©Ê¸ê°T
+    //æŒ‰æ»‘é¼ å³éµå–å¾—tileå±¬æ€§è³‡è¨Š
     void RightClickToGetTileInfo()
     {
         if (Input.GetMouseButtonDown(1))
@@ -54,7 +54,7 @@ public class Select_Test : MonoBehaviour
                 {
                     selectHintPf.SetActive(true);
                     selectHintPf.transform.position = tile.transform.position + Vector3.up * hintHeight;
-                    Debug.Log($"®y¼Ğ¦ì¸m{tile.gridPos}¡A¦a§Î¬°{(tile.IsLand ? "³°¦a" : "¤ô")}¡A»E¸¨¬°{tile.tileData.setTownType}");
+                    Debug.Log($"åº§æ¨™ä½ç½®{tile.gridPos}ï¼Œåœ°å½¢ç‚º{(tile.IsLand ? "é™¸åœ°" : "æ°´")}ï¼Œèšè½ç‚º{tile.tileData.setTownType}");
 
                 }
                 else
@@ -65,10 +65,10 @@ public class Select_Test : MonoBehaviour
         }
     }
 
-    //«ö·Æ¹«¥ªÁä©ì¦²«÷±µtile
+    //æŒ‰æ»‘é¼ å·¦éµæ‹–æ›³æ‹¼æ¥tile
     void LeftClickToDragAndSnap()
     {
-        //®³°_
+        //æ‹¿èµ·
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
@@ -88,10 +88,10 @@ public class Select_Test : MonoBehaviour
             }
         }
 
-        //©ì¦²
+        //æ‹–æ›³
         if (isHolding && heldTile != null)
         {
-            Plane plane = new Plane(Vector3.up, new Vector3(0, planeHeight, 0)); //zx¥­­±
+            Plane plane = new Plane(Vector3.up, new Vector3(0, planeHeight, 0)); //zxå¹³é¢
             Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
 
             if (plane.Raycast(ray, out float enter))
@@ -99,7 +99,7 @@ public class Select_Test : MonoBehaviour
                 Vector3 point = ray.GetPoint(enter);
                 heldTile.transform.position = new Vector3(point.x, planeHeight, point.z);
 
-                //§ä³Ìªñ¦a¹Ïtile
+                //æ‰¾æœ€è¿‘åœ°åœ–tile
                 Collider[] hits = Physics.OverlapSphere(heldTile.transform.position, snapDistance, mapTileLayer);
 
                 Collider nearestCollider = null;
@@ -115,15 +115,15 @@ public class Select_Test : MonoBehaviour
                     }
                 }
 
-                //¤»Ãä§Îªº¤»­Ó¤è¦V
+                //å…­é‚Šå½¢çš„å…­å€‹æ–¹å‘
                 Vector3[] hexDirs = new Vector3[]
                 {
-                new Vector3(1.5f * hexTileSize, 0, 0),                                       // ¥k
-                new Vector3(0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),         // ¥k¤W
-                new Vector3(-0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),        // ¥ª¤W
-                new Vector3(-1.5f * hexTileSize, 0, 0),                                      // ¥ª
-                new Vector3(-0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize),       // ¥ª¤U
-                new Vector3(0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize)         // ¥k¤U
+                new Vector3(1.5f * hexTileSize, 0, 0),                                       // å³
+                new Vector3(0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),         // å³ä¸Š
+                new Vector3(-0.75f * hexTileSize, 0, Mathf.Sqrt(3)/2 * hexTileSize),        // å·¦ä¸Š
+                new Vector3(-1.5f * hexTileSize, 0, 0),                                      // å·¦
+                new Vector3(-0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize),       // å·¦ä¸‹
+                new Vector3(0.75f * hexTileSize, 0, -Mathf.Sqrt(3)/2 * hexTileSize)         // å³ä¸‹
                 };
 
                 if (nearestCollider != null && minDist < maxCheckDistance)
@@ -158,7 +158,7 @@ public class Select_Test : MonoBehaviour
 
             }
 
-            //©ñ¶}
+            //æ”¾é–‹
             if (Input.GetMouseButtonUp(0) && isHolding)
             {
                 isHolding = false;
